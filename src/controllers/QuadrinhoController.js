@@ -4,28 +4,34 @@ import quadrinhoModel from "../models/quadrinho.js";
 
 class QuadrinhoController{
 
-  static async buscaQuadrinhos(req, res){
+  static async buscaQuadrinhos(req, res, next){
     try {
       const listaQuadrinhos = await quadrinhoModel.find({});
       res.status(200).json(listaQuadrinhos);
     } catch (error) {
-      res.status(500).json({message: `Falha na requisição ${error.message}`});
+      next(error);
     }
   }
 
 
-  static async buscaQuadrinho(req, res){
+  static async buscaQuadrinho(req, res, next){
     try {
       const idQuadrinho = req.params.id;
       const retornoQuadrinho = await quadrinhoModel.findById(idQuadrinho);
+
+      if (retornoQuadrinho === null) {
+        res.status(404).json({message: "ID não encontrado"});
+        return;
+      }
+
       res.status(200).json(retornoQuadrinho);
     } catch (error) {
-      res.status(500).json({message: `Falha na requisição ${error.message}`});
+      next(error);
     }
   }
 
 
-  static async cadastraQuadrinho(req, res){
+  static async cadastraQuadrinho(req, res, next){
     const dadosQuadrinho = req.body;
 
     try {
@@ -35,12 +41,12 @@ class QuadrinhoController{
       const quadrinhoCadastrado = await quadrinhoModel.create(novoQuadrinho);
       res.status(201).json({message: "Quadrinho cadastrado com sucesso!", data: quadrinhoCadastrado});
     } catch (error) {
-      res.status(500).json({message: `Falha na requisição ${error.message}`});            
+      next(error);
     }
   }
 
 
-  static async atualizaQuadrinho(req, res){
+  static async atualizaQuadrinho(req, res, next){
     try {
       const idQuadrinho = req.params.id;
       const dadosQuadrinho = req.body;
@@ -48,18 +54,18 @@ class QuadrinhoController{
       const quadrinhoAtualizado = await quadrinhoModel.findById(idQuadrinho);
       res.status(200).json({message: "Quadrinho atualizado!", data: quadrinhoAtualizado});
     } catch (error) {
-      res.status(500).json({message: `Falha na requisição ${error.message}`});
+      next(error);
     }
   }
 
 
-  static async deletaQuadrinho(req, res){
+  static async deletaQuadrinho(req, res, next){
     try {
       const idQuadrinho = req.params.id;
       await quadrinhoModel.findByIdAndDelete(idQuadrinho);
       res.status(200).json({message: "Quadrinho deletado!"});
     } catch (error) {
-      res.status(500).json({message: `Falha na requisição ${error.message}`});
+      next(error);
     }
   }
 }
