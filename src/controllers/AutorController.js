@@ -1,5 +1,5 @@
 import NotFoundErro from "../errosMessagesAndStatus/NotFoundErro.js";
-import { autorModel } from "../models/autor.js";
+import { autorModel } from "../models/index.js";
 
 class AutorController {
 

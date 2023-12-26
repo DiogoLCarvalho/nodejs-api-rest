@@ -1,7 +1,7 @@
 import NotFoundErro from "../errosMessagesAndStatus/NotFoundErro.js";
-import { autorModel } from "../models/autor.js";
-import { editoraModel } from "../models/editora.js";
-import quadrinhoModel from "../models/quadrinho.js";
+import { autorModel } from "../models/index.js";
+import { editoraModel } from "../models/index.js";
+import {quadrinhoModel} from "../models/index.js";
 
 class QuadrinhoController{
 

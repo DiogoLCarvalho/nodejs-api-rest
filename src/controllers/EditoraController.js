@@ -1,5 +1,5 @@
 import NotFoundErro from "../errosMessagesAndStatus/NotFoundErro.js";
-import { editoraModel } from "../models/editora.js";
+import { editoraModel } from "../models/index.js";
 
 class EditoraController{
 
