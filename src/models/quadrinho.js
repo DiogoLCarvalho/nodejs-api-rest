@@ -1,16 +1,14 @@
 import mongoose from "mongoose";
-import { editoraSchema } from "../models/editora.js";
-import { autorSchema } from "../models/autor.js";
 
 const quadrinhoSchema = new mongoose.Schema({
   id: {type: mongoose.Schema.Types.ObjectId},
-  nome: {type: mongoose.Schema.Types.String, required: true},
-  descricao: {type: mongoose.Schema.Types.String, required: true},
+  nome: {type: mongoose.Schema.Types.String, required: [true, "O nome do quadrinho é obrigatório"]},
+  descricao: {type: mongoose.Schema.Types.String, required: [true, "A descrição do quadrinho é obrigatória"]},
   segmento: {type: mongoose.Schema.Types.String},
   genero: {type: mongoose.Schema.Types.String},
-  preco: {type: mongoose.Schema.Types.Number, required: true},
-  autor: autorSchema,
-  editora: editoraSchema
+  preco: {type: mongoose.Schema.Types.Number, required: [true, "O preço do quadrinho é obrigatório"]},
+  autor: {type: mongoose.Schema.Types.ObjectId, ref: "autor", required: [true, "O autor é obrigatório"]},
+  editora: {type: mongoose.Schema.Types.ObjectId, ref: "editora", required: [true, "A editora é obrigatória"]}
 }, {versionKey: false});
 
 const quadrinhoModel = mongoose.model("quadrinho", quadrinhoSchema);

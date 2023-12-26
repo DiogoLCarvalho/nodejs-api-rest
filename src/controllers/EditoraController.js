@@ -1,3 +1,4 @@
+import NotFoundErro from "../errosMessagesAndStatus/NotFoundErro.js";
 import { editoraModel } from "../models/editora.js";
 
 class EditoraController{
@@ -17,12 +18,12 @@ class EditoraController{
       const idEditora = req.params.id;
       const resultadoEditora = await editoraModel.findById(idEditora);
 
-      if (resultadoEditora === null) {
-        res.status(404).json({message: "ID não encontrado"});
-        return;
+      if (resultadoEditora !== null) {
+        res.status(200).json(resultadoEditora);
+      }else{
+        next(new NotFoundErro("ID da editora não encontrado"));
       }
 
-      res.status(200).json(resultadoEditora);
     } catch (error) {
       next(error);
     }
@@ -44,9 +45,16 @@ class EditoraController{
     try {
       const idEditora = req.params.id;
       const dadosEditora = req.body;
-      await editoraModel.findByIdAndUpdate(idEditora, dadosEditora);
-      const editoraAtualizada = await editoraModel.findById(idEditora);
-      res.status(200).json({message: "Editora atualizada!", data: editoraAtualizada});
+      const resultadoEditora = await editoraModel.findByIdAndUpdate(idEditora, dadosEditora);
+
+      if (resultadoEditora !== null) {
+        const editoraAtualizada = await editoraModel.findById(idEditora);
+        res.status(200).json({message: "Editora atualizada!", data: editoraAtualizada});
+      } else {
+        next(new NotFoundErro("ID da editora não encontrado"));
+      }
+
+
     } catch (error) {
       next(error);
     }
@@ -56,8 +64,14 @@ class EditoraController{
   static async deletaEditora(req, res, next){
     try {
       const idEditora = req.params.id;
-      await editoraModel.findByIdAndDelete(idEditora);
-      res.status(200).json({message: "Editora excluída!"});
+      const resultadoEditora = await editoraModel.findByIdAndDelete(idEditora);
+
+      if (resultadoEditora !== null) {
+        res.status(200).json({message: "Editora excluída!"});
+      } else {
+        next(new NotFoundErro("ID da editora não encontrado"));
+      }
+
     } catch (error) {
       next(error);
     }

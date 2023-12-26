@@ -1,3 +1,4 @@
+import NotFoundErro from "../errosMessagesAndStatus/NotFoundErro.js";
 import { autorModel } from "../models/autor.js";
 import { editoraModel } from "../models/editora.js";
 import quadrinhoModel from "../models/quadrinho.js";
@@ -19,12 +20,12 @@ class QuadrinhoController{
       const idQuadrinho = req.params.id;
       const retornoQuadrinho = await quadrinhoModel.findById(idQuadrinho);
 
-      if (retornoQuadrinho === null) {
-        res.status(404).json({message: "ID não encontrado"});
-        return;
+      if (retornoQuadrinho !== null) {
+        res.status(200).json(retornoQuadrinho);
+      }else{
+        next(new NotFoundErro("ID do quadrinho não encontrado"));
       }
 
-      res.status(200).json(retornoQuadrinho);
     } catch (error) {
       next(error);
     }
@@ -50,9 +51,15 @@ class QuadrinhoController{
     try {
       const idQuadrinho = req.params.id;
       const dadosQuadrinho = req.body;
-      await quadrinhoModel.findByIdAndUpdate(idQuadrinho, dadosQuadrinho);
-      const quadrinhoAtualizado = await quadrinhoModel.findById(idQuadrinho);
-      res.status(200).json({message: "Quadrinho atualizado!", data: quadrinhoAtualizado});
+      const resultadoQuadrinho = await quadrinhoModel.findByIdAndUpdate(idQuadrinho, dadosQuadrinho);
+
+      if (resultadoQuadrinho !== null) {
+        const quadrinhoAtualizado = await quadrinhoModel.findById(idQuadrinho);
+        res.status(200).json({message: "Quadrinho atualizado!", data: quadrinhoAtualizado});
+      }else{
+        next(new NotFoundErro("ID do quadrinho não encontrado"));
+      }
+
     } catch (error) {
       next(error);
     }
@@ -62,8 +69,14 @@ class QuadrinhoController{
   static async deletaQuadrinho(req, res, next){
     try {
       const idQuadrinho = req.params.id;
-      await quadrinhoModel.findByIdAndDelete(idQuadrinho);
-      res.status(200).json({message: "Quadrinho deletado!"});
+      const resultadoQuadrinho = await quadrinhoModel.findByIdAndDelete(idQuadrinho);
+
+      if (resultadoQuadrinho !== null) {
+        res.status(200).json({message: "Quadrinho deletado!"});
+      }else{
+        next(new NotFoundErro("ID do quadrinho não encontrado"));
+      }
+
     } catch (error) {
       next(error);
     }

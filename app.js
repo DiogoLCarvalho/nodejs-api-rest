@@ -2,7 +2,8 @@ import "dotenv/config";
 import express from "express";
 import conectarComBanco from "./src/config/database.js";
 import routes from "./src/routes/index.js";
-import manipulaErros from "./src/middleware/erros.js";
+import manipulaErros from "./src/middleware/manipulaErros.js";
+import manipula404 from "./src/middleware/manipula404.js";
 
 const conexao = await conectarComBanco();
 
@@ -19,6 +20,8 @@ const APP = express();
 routes(APP);
 
 const PORT = 3000;
+
+APP.use(manipula404);
 
 APP.use(manipulaErros);
 
