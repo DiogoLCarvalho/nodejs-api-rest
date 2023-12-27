@@ -30,7 +30,47 @@ class QuadrinhoController{
       next(error);
     }
   }
+  
+  // http://localhost:3000/quadrinho/busca?nome=Homem-Animal
+  // http://localhost:3000/quadrinho/busca?genero=Ação&nome=The Walking Dead: Volume 2
+  // busca pelo: nome, gênero, preço e editora
+  static async buscaQuadrinhoPelaURL(req, res,next){
+    try {
+      const {genero, nome, minPreco, maxPreco, nomeEditora} = req.query;
 
+      let busca = {};
+
+      if (genero) busca.genero = genero;
+      if (nome) busca.nome = { $regex: nome, $options: "i"}; // busca por regex para achar um texto dentro do nome da HQ
+      if (minPreco) busca.preco = {$gte: minPreco};
+      if (maxPreco) busca.preco = {$lte: maxPreco};
+      if (maxPreco && minPreco) busca.preco = {$gte: minPreco, $lte: maxPreco};
+
+      if (nomeEditora){
+        const editora = await editoraModel.findOne({nome: nomeEditora});
+
+        if (editora !== null){
+          const editoraID = editora._id;
+
+          busca["editora._id"] = editoraID;
+        }else{
+          busca = null;
+        }
+        
+      }
+
+      if (busca !== null){
+        const quadrinhoResultado = await quadrinhoModel.find(busca);
+
+        res.status(200).json(quadrinhoResultado);
+      }else{
+        res.status(200).json([]);
+      }
+      
+    } catch (error) {
+      next(error);
+    }
+  }
 
   static async cadastraQuadrinho(req, res, next){
     const dadosQuadrinho = req.body;
@@ -81,6 +121,7 @@ class QuadrinhoController{
       next(error);
     }
   }
+
 }
 
 export default QuadrinhoController;
