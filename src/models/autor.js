@@ -8,7 +8,7 @@ const autorSchema = new mongoose.Schema({
   nacionalidade:{ 
     type: mongoose.Schema.Types.String, 
     enum: { 
-      values: ["Brasil", "Estados Unidos da América", "Reino Unido", "Japão"],
+      values: ["Brasil", "Estados Unidos da América", "Reino Unido", "Japão", "França"],
       message: "{VALUE} não é um país permitido!"
     }
   },

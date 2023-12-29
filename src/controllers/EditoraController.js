@@ -5,8 +5,12 @@ class EditoraController{
 
   static async buscaEditoras(req, res, next){
     try {
-      const resultadoEditoras = await editoraModel.find({});
-      res.status(200).json(resultadoEditoras);
+      const resultadoEditoras = editoraModel.find();
+
+      // Paginação
+      req.resultado = resultadoEditoras;
+
+      next();
     } catch (error) {
       next(error);
     }

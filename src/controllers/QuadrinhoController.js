@@ -5,10 +5,14 @@ import {quadrinhoModel} from "../models/index.js";
 
 class QuadrinhoController{
 
+  // Armazena o resultado da busca na requisição que vai ser acessado pelo middleware de paginacao, eles são ligados pela rota
   static async buscaQuadrinhos(req, res, next){
     try {
-      const listaQuadrinhos = await quadrinhoModel.find({});
-      res.status(200).json(listaQuadrinhos);
+      const buscaLivro = quadrinhoModel.find();
+
+      req.resultado = buscaLivro;
+
+      next();
     } catch (error) {
       next(error);
     }
@@ -60,9 +64,11 @@ class QuadrinhoController{
       }
 
       if (busca !== null){
-        const quadrinhoResultado = await quadrinhoModel.find(busca);
+        const quadrinhoResultado = quadrinhoModel.find(busca);
 
-        res.status(200).json(quadrinhoResultado);
+        req.resultado = quadrinhoResultado;
+
+        next();
       }else{
         res.status(200).json([]);
       }

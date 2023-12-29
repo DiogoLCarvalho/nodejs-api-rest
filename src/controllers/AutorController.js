@@ -6,8 +6,12 @@ class AutorController {
 
   static async buscaAutores(req, res, next) {
     try {
-      const resultadoAutores = await autorModel.find({});
-      res.status(200).json(resultadoAutores);
+      const resultadoAutores = autorModel.find();
+      
+      // Paginação
+      req.resultado = resultadoAutores;
+
+      next();
     } catch (error) {
       next(error);
     }

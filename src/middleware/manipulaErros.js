@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import ErroInterno from "../errosMessagesAndStatus/ErroInterno.js";
 import CastErro from "../errosMessagesAndStatus/CastErro.js";
 import ValidationErro from "../errosMessagesAndStatus/ValidationErro.js";
-import NotFoundErro from "../errosMessagesAndStatus/NotFoundErro.js";
 
 // Middleware de erro
 // next é quem encaminha o erro que chegou do controlador para esse middleware aq
@@ -17,7 +16,7 @@ function manipulaErros(erro, req, res, next) {
   }else if (erro instanceof mongoose.Error.ValidationError) {
     new ValidationErro(erro).enviarResposta(res);
 
-  } else if (erro instanceof NotFoundErro) {
+  } else if (erro instanceof ErroInterno) {
     erro.enviarResposta(res);
   }else {
     new ErroInterno().enviarResposta(res);
